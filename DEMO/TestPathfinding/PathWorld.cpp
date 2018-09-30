@@ -78,9 +78,6 @@ void PathWorld::loadGraph(BT::File& file)
     buffer >> nbNode;
     BT_ASSERT(nbNode > 0);
 
-#ifdef LINK
-    _link.resize(nbNode);
-#endif
     // Parse each node and create into graph
     for(size_t nodeID=0; nodeID < nbNode; ++nodeID)
     {
@@ -107,11 +104,7 @@ void PathWorld::loadGraph(BT::File& file)
 #endif
 #endif
 
-#ifdef LINK
-        _link[nodeID] = boost::add_vertex(node, _worldGraph);
-#else
         boost::add_vertex(node, _worldGraph);
-#endif
     }
 
     // Parse each edge
@@ -126,16 +119,9 @@ void PathWorld::loadGraph(BT::File& file)
         float distance;
         buffer >> nodeID0 >> nodeID1 >> distance;
 
-#ifdef LINK
-        const WalkTerrainID wtNodeId0 = _link[nodeID0];
-        const WalkTerrainID wtNodeId1 = _link[nodeID1];
-        BT_ASSERT(0 <= nodeID0 && nodeID0 < num_vertices(_worldGraph)); // DEV Issue: Check valid data !
-        BT_ASSERT(0 <= nodeID1 && nodeID1 < num_vertices(_worldGraph)); // DEV Issue: Check valid data !
-        
-#else
         const WalkTerrainID wtNodeId0 = static_cast<WalkTerrainID>(nodeID0);
         const WalkTerrainID wtNodeId1 = static_cast<WalkTerrainID>(nodeID1);
-#endif
+
         WalkTerrain& node0 = _worldGraph[wtNodeId0];
         WalkTerrain& node1 = _worldGraph[wtNodeId1];
 

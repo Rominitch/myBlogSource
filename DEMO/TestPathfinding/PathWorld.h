@@ -2,8 +2,6 @@
 
 #include "Define.h"
 
-//#define LINK
-
 /// Terrain type
 enum Type
 {
@@ -208,15 +206,6 @@ class PathWorld final
         float updateWeight(const Agent& agent, const EdgeInfo& edgeInfo) const;
         float updateSpeedWeight(const EdgeInfo& edgeInfo) const;
 
-#ifdef LINK        
-        WalkTerrainID convert(const size_t& id) const
-        {
-            BT_ASSERT(id < _link.size());
-            return _link[id];
-        }
-
-        std::vector<WalkTerrainID>  _link;
-#endif
     private:
         void loadGraph(BT::File& file);
 

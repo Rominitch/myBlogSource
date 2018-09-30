@@ -36,13 +36,11 @@ class PathWorldTest : public ::testing::Test
             {
                 std::vector<BoostPoint> pathWay;
                 bool valid = false;
-#ifdef LINK  
-                ASSERT_NO_THROW(valid = path.computePath(newAgent, path.convert(start), path.convert(start + query), pathWay, speedMode));
-#else
+
                 const PathWorld::WalkTerrainID n0 = static_cast<PathWorld::WalkTerrainID>(start);
                 const PathWorld::WalkTerrainID n1 = static_cast<PathWorld::WalkTerrainID>(start + query);
                 ASSERT_NO_THROW(valid = path.computePath(newAgent, n0, n1, pathWay, speedMode));
-#endif
+
                 if(valid)
                 {
                     ++nbValid;
@@ -97,12 +95,12 @@ TEST_F(PathWorldTest, COMPLEX_computePath)
     read(L"map/Map_complex.map", path);
 
     computePath(path, 550,   15000);
-    computePath(path, 10050, 15000);
-    computePath(path, 30050, 15000);
+    computePath(path, 1050,  1500);
+    computePath(path, 3050,  1000);
 
     ASSERT_NO_THROW(path.release());
 }
-
+/*
 TEST_F(PathWorldTest, EASY_computePath_SPEED)
 {
     PathWorld path;
@@ -138,3 +136,4 @@ TEST_F(PathWorldTest, COMPLEX_computePath_SPEED)
 
     ASSERT_NO_THROW(path.release());
 }
+*/
