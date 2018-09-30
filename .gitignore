@@ -30,3 +30,10 @@
 *.exe
 *.out
 *.app
+DEMO/TestPathfinding/Boost-1.68.0/boost/
+DEMO/TestPathfinding/x64/
+DEMO/TestPathfinding/bin/release/TestPathfinding.ipdb
+DEMO/TestPathfinding/bin/release/TestPathfinding.iobj
+DEMO/TestPathfinding/TestPathfinding.vcxproj.filters
+DEMO/TestPathfinding/.vs/
+*.skp

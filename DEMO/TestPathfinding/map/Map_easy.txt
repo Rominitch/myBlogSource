@@ -1,0 +1,11 @@
+Vertices read:  187
+Vertices saved: 65
+Polygon issue: 0 / 39
+Polygon split: 0 / 39
+Navigable node: 39
+Real link: 68 - removed 79
+Subgraph ID: 1 -> 18 - Left 21
+Subgraph ID: 2 -> 14 - Left 7
+Subgraph ID: 3 -> 7 - Left 0
+Subgraph found: 4
+Nodes: 39
