@@ -3,7 +3,7 @@
 #include "File.h"
 #include "PathWorld.h"
 
-#define DEBUG_PRINT
+//#define DEBUG_PRINT
 
 class PathWorldTest : public ::testing::Test
 {
@@ -31,21 +31,31 @@ class PathWorldTest : public ::testing::Test
             BT::uint32 maxPath = 0;
             BT::uint32 nbValid = 0;
 
+            std::chrono::time_point<std::chrono::system_clock> startTime, endTime;
+            int minElapsed = std::numeric_limits<int>::max();
+            int maxElapsed = 0;
+
+            const PathWorld::WalkTerrainID n0 = static_cast<PathWorld::WalkTerrainID>(start);
+
             // Check some path
             for(BT::uint32 query = 0; query < nbQuery; ++query)
             {
                 std::vector<BoostPoint> pathWay;
                 bool valid = false;
 
-                const PathWorld::WalkTerrainID n0 = static_cast<PathWorld::WalkTerrainID>(start);
                 const PathWorld::WalkTerrainID n1 = static_cast<PathWorld::WalkTerrainID>(start + query);
+                
+                startTime = std::chrono::system_clock::now();
                 ASSERT_NO_THROW(valid = path.computePath(newAgent, n0, n1, pathWay, speedMode));
-
+                endTime = std::chrono::system_clock::now();
                 if(valid)
                 {
                     ++nbValid;
                     minPath = std::min(minPath, static_cast<BT::uint32>(pathWay.size()));
                     maxPath = std::max(maxPath, static_cast<BT::uint32>(pathWay.size()));
+                    int elapse = std::chrono::duration_cast<std::chrono::milliseconds>(endTime-startTime).count();
+                    maxElapsed = std::max<int>( maxElapsed, elapse );
+                    minElapsed = std::min<int>( minElapsed, elapse );
                     
 #ifdef DEBUG_PRINT
                     std::cout << start + query << "/" << start + nbQuery
@@ -58,10 +68,15 @@ class PathWorldTest : public ::testing::Test
 #endif
                 }
             }
+            const PathWorld::WalkTerrain& startNode = path.getWalkTerrain( n0 );
+            const std::array<BT::String, NbType> _names = { "Ocean", "Swamp", "Forest", "Clay", "Linestone", "Sand", "Rock" };
 
             std::cout << std::endl << "Statistics:" << std::endl;
+            std::cout << "  Start node: "<< _names[startNode._terrain._type] << " H= " << startNode._terrain._height << " SubGraph= " << startNode._subgraphID << std::endl;
             std::cout << "  nbValid: " << nbValid << "/" << nbQuery << std::endl;
             std::cout << "  min / max: " << minPath << "/" << maxPath << std::endl;
+            std::cout << "  min time for one path: " << minElapsed << " ms" << std::endl;
+            std::cout << "  max time for one path: " << maxElapsed << " ms" << std::endl;
         }
 };
 
@@ -94,46 +109,15 @@ TEST_F(PathWorldTest, COMPLEX_computePath)
     PathWorld path;
     read(L"map/Map_complex.map", path);
 
+    // World See
     computePath(path, 550,   15000);
+
+    // Main continent
     computePath(path, 1050,  1500);
-    computePath(path, 3050,  1000);
+    computePath(path, 3251,  1000);
+
+    // On Island
+    computePath(path, 3067, 15000);
 
     ASSERT_NO_THROW(path.release());
 }
-/*
-TEST_F(PathWorldTest, EASY_computePath_SPEED)
-{
-    PathWorld path;
-    read(L"map/Map_easy.map", path);
-
-    computePath(path, 10, 20, true);
-    computePath(path, 2,  20, true);
-    computePath(path, 9,  20, true);
-
-    ASSERT_NO_THROW(path.release());
-}
-
-TEST_F(PathWorldTest, SMALL_computePath_SPEED)
-{
-    PathWorld path;
-    read(L"map/Map_small.map", path);
-
-    computePath(path, 30, 160, true);
-    computePath(path, 2,  160, true);
-    computePath(path, 60, 160, true);
-
-    ASSERT_NO_THROW(path.release());
-}
-
-TEST_F(PathWorldTest, COMPLEX_computePath_SPEED)
-{
-    PathWorld path;
-    read(L"map/Map_complex.map", path);
-
-    computePath(path, 550,  15000, true);
-    computePath(path, 1005, 15000, true);
-    computePath(path, 3050, 11000, true);
-
-    ASSERT_NO_THROW(path.release());
-}
-*/
