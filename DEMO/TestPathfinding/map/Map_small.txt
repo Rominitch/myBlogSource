@@ -3,9 +3,10 @@ Vertices saved: 344
 Polygon issue: 0 / 242
 Polygon split: 1 / 242
 Navigable node: 243
-Real link: 737 - removed 221
-Subgraph ID: 1 -> 194 - Left 49
-Subgraph ID: 2 -> 40 - Left 9
-Subgraph ID: 3 -> 9 - Left 0
-Subgraph found: 4
+Real link: 463 - removed 93
+Subgraph ID: 1 -> 18 - Left 225
+Subgraph ID: 2 -> 40 - Left 185
+Subgraph ID: 3 -> 176 - Left 9
+Subgraph ID: 4 -> 9 - Left 0
+Subgraph found: 5
 Nodes: 243

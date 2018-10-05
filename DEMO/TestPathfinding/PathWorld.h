@@ -131,8 +131,11 @@ class PathWorld final
             CostType operator()(WalkTerrainID current)
             {
                 const WalkTerrain& node = _worldGraph[current];
+                BoostPoint distance;
+                distance.set<0>(_goal._centroid.get<0>() - node._centroid.get<0>());
+                distance.set<1>(_goal._centroid.get<1>() - node._centroid.get<1>());
                 // Compute dot = length * length
-                return bg::dot_product(node._centroid, _goal._centroid);
+                return bg::dot_product(distance, distance);
             }
 
             private:

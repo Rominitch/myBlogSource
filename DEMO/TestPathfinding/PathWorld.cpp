@@ -91,7 +91,9 @@ void PathWorld::loadGraph(BT::File& file)
 
         node._centroid.set<0>(x);
         node._centroid.set<1>(y);
-
+#ifdef DUMP_GEOMETRY
+        std::cout << terrainID << " " << x << " " << y << std::endl;
+#endif
         // Create polygon from indices
         for(const auto& index : indices)
         {
@@ -118,6 +120,9 @@ void PathWorld::loadGraph(BT::File& file)
         BT::uint32 nodeID1;
         float distance;
         buffer >> nodeID0 >> nodeID1 >> distance;
+#ifdef DUMP_GEOMETRY
+        std::cout << nodeID0 << " " << nodeID1 << std::endl;
+#endif
 
         const WalkTerrainID wtNodeId0 = static_cast<WalkTerrainID>(nodeID0);
         const WalkTerrainID wtNodeId1 = static_cast<WalkTerrainID>(nodeID1);

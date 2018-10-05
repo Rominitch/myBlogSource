@@ -31,12 +31,13 @@ class PathWorldTest : public ::testing::Test
             BT::uint32 maxPath = 0;
             BT::uint32 nbValid = 0;
 
-            std::chrono::time_point<std::chrono::system_clock> startTime, endTime;
             int minElapsed = std::numeric_limits<int>::max();
             int maxElapsed = 0;
+            size_t sumTime = 0;
 
             const PathWorld::WalkTerrainID n0 = static_cast<PathWorld::WalkTerrainID>(start);
 
+            const std::chrono::time_point<std::chrono::system_clock> startCompute = std::chrono::system_clock::now();
             // Check some path
             for(BT::uint32 query = 0; query < nbQuery; ++query)
             {
@@ -45,9 +46,9 @@ class PathWorldTest : public ::testing::Test
 
                 const PathWorld::WalkTerrainID n1 = static_cast<PathWorld::WalkTerrainID>(start + query);
                 
-                startTime = std::chrono::system_clock::now();
+                std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
                 ASSERT_NO_THROW(valid = path.computePath(newAgent, n0, n1, pathWay, speedMode));
-                endTime = std::chrono::system_clock::now();
+                std::chrono::time_point<std::chrono::system_clock> endTime = std::chrono::system_clock::now();
                 if(valid)
                 {
                     ++nbValid;
@@ -56,7 +57,7 @@ class PathWorldTest : public ::testing::Test
                     int elapse = std::chrono::duration_cast<std::chrono::milliseconds>(endTime-startTime).count();
                     maxElapsed = std::max<int>( maxElapsed, elapse );
                     minElapsed = std::min<int>( minElapsed, elapse );
-                    
+                    sumTime   += static_cast<size_t>(elapse);
 #ifdef DEBUG_PRINT
                     std::cout << start + query << "/" << start + nbQuery
                               << " = " << static_cast<BT::uint32>(pathWay.size());
@@ -77,6 +78,8 @@ class PathWorldTest : public ::testing::Test
             std::cout << "  min / max: " << minPath << "/" << maxPath << std::endl;
             std::cout << "  min time for one path: " << minElapsed << " ms" << std::endl;
             std::cout << "  max time for one path: " << maxElapsed << " ms" << std::endl;
+            std::cout << "  mean: " << sumTime / nbValid << " ms" << std::endl;
+            std::cout << "  Global time: " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()-startCompute).count() << " ms" << std::endl;
         }
 };
 
