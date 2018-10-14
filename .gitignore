@@ -37,3 +37,5 @@ DEMO/TestPathfinding/bin/release/TestPathfinding.iobj
 DEMO/TestPathfinding/TestPathfinding.vcxproj.filters
 DEMO/TestPathfinding/.vs/
 *.skp
+.vs/
+Compilation/

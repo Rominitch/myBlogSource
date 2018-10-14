@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <GLM_PATH>glm-0.9.8.5</GLM_PATH>
+    <GOOGLETEST_PATH>googletest-1.8.C</GOOGLETEST_PATH>
+  </PropertyGroup>
+  <PropertyGroup>
+    <_PropertySheetDisplayName>External</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\$(GOOGLETEST_PATH)\include;$(SolutionDir)External\$(GLM_PATH);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\googletest-1.8.C\lib64</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="GLM_PATH">
+      <Value>$(GLM_PATH)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GOOGLETEST_PATH">
+      <Value>$(GOOGLETEST_PATH)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
