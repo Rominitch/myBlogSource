@@ -81,6 +81,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="UT_Matrix.cpp" />
     <ClCompile Include="UT_Quaternion.cpp" />
+    <ClCompile Include="UT_SceneGraph.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\Dependancies.h" />

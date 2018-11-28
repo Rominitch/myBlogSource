@@ -1,3 +1,8 @@
+///------------------------------------------------------------------------------------------------
+/// All demonstrations and codes about http://mouca.fr/wordpress/2018/05/31/matrice-quaternion-et-graphe-de-scene-partie-2/
+///
+/// Author: Rominitch
+///------------------------------------------------------------------------------------------------
 #include "Dependancies.h"
 
 #include "Common/Orientation.h"

@@ -6,8 +6,8 @@ struct Orientation
     glm::vec3 _position;
     glm::vec3 _homothetie;
 
-    Orientation():
-    _homothetie(1.0f, 1.0f, 1.0f)
+    Orientation(const glm::vec3& position = glm::vec3(0.0f), const glm::vec3& homothetie = glm::vec3(1.0f)):
+    _position(position), _homothetie(homothetie)
     {}
 
     Orientation(const Orientation& copy) :
@@ -15,6 +15,13 @@ struct Orientation
     _position( copy._position ),
     _homothetie( copy._homothetie )
     {}
+
+    static Orientation inverse(const Orientation& orientation)
+    {
+        Orientation newOrientation(orientation);
+        newOrientation.inverse();
+        return newOrientation;
+    }
 
     void inverse()
     {
