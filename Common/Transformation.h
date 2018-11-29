@@ -1,24 +1,30 @@
+///------------------------------------------------------------------------------------------------
+/// Transformation structure: make similar thing than matrix 4x4 but using quaternion rotation system.
+///
+/// Author: Rominitch
+///------------------------------------------------------------------------------------------------
+
 #pragma once
 
-struct Orientation
+struct Transformation
 {
     glm::quat _rotation;
     glm::vec3 _position;
     glm::vec3 _homothetie;
 
-    Orientation(const glm::vec3& position = glm::vec3(0.0f), const glm::vec3& homothetie = glm::vec3(1.0f)):
+    Transformation(const glm::vec3& position = glm::vec3(0.0f), const glm::vec3& homothetie = glm::vec3(1.0f)):
     _position(position), _homothetie(homothetie)
     {}
 
-    Orientation(const Orientation& copy) :
+    Transformation(const Transformation& copy) :
     _rotation( copy._rotation ),
     _position( copy._position ),
     _homothetie( copy._homothetie )
     {}
 
-    static Orientation inverse(const Orientation& orientation)
+    static Transformation inverse(const Transformation& orientation)
     {
-        Orientation newOrientation(orientation);
+        Transformation newOrientation(orientation);
         newOrientation.inverse();
         return newOrientation;
     }
@@ -31,9 +37,9 @@ struct Orientation
     }
 
     // World = This * Local
-    Orientation operator * ( const Orientation& localSpace ) const
+    Transformation operator * ( const Transformation& localSpace ) const
     {
-        Orientation worldSpace;
+        Transformation worldSpace;
         worldSpace._position = _position + _rotation * (localSpace._position * _homothetie);
         worldSpace._rotation = _rotation * localSpace._rotation;
         worldSpace._homothetie  = _homothetie * localSpace._homothetie;
@@ -52,18 +58,18 @@ struct Orientation
 #endif
     }
 
-    static Orientation lerp(const Orientation& a, const Orientation& b, const float factor)
+    static Transformation lerp(const Transformation& a, const Transformation& b, const float factor)
     {
-        Orientation interpole;
+        Transformation interpole;
         interpole._homothetie = a._homothetie + (b._homothetie - a._homothetie) * factor;
         interpole._rotation   = glm::lerp( a._rotation, b._rotation, factor );
         interpole._position   = a._position + (b._position - a._position) * factor;
         return interpole;
     }
 
-    static Orientation slerp( const Orientation& a, const Orientation& b, const float factor )
+    static Transformation slerp( const Transformation& a, const Transformation& b, const float factor )
     {
-        Orientation interpole;
+        Transformation interpole;
         interpole._homothetie = a._homothetie + (b._homothetie - a._homothetie) * factor;
         interpole._rotation   = glm::slerp( a._rotation, b._rotation, factor );
         interpole._position   = a._position + (b._position - a._position) * factor;

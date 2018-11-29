@@ -5,14 +5,14 @@
 ///------------------------------------------------------------------------------------------------
 #include "Dependancies.h"
 
-#include "Common/Orientation.h"
+#include "Common/Transformation.h"
 
 ///------------------------------------------------------------------------------------------------
 /// Test: all scene graph data with orientation system.
-class SceneGraphOrientation
+class SceneGraphTransformation
 {
 public:
-    SceneGraphOrientation() :
+    SceneGraphTransformation() :
         P0( glm::vec3( 0.0f, 2.0f/9.0f, 0.0f ), glm::vec3( 2.0f/3.0f ) ),
         P1( glm::vec3( 2.0f/3.0f, 4.0f/3.0f, 0.0f ) ),
         T0( glm::vec3( -5.0f/3.0f, -2.0f/3.0f, 0.0f ), glm::vec3( 2.0f ) ),
@@ -21,17 +21,17 @@ public:
         C0( glm::vec3( -1.0f, 1.0f/3.0f, 0.0f ) )
     {}
 
-    Orientation P0, P1, T0, T1, V1, C0;
+    Transformation P0, P1, T0, T1, V1, C0;
 };
 
-TEST( SceneGraphOrientation, computeModel )
+TEST( SceneGraphTransformation, computeModel )
 {
     const float precision = 1e-5f;
-    const SceneGraphOrientation scene;
+    const SceneGraphTransformation scene;
 
     // Compute composed orientation and apply to C.
     const glm::vec3 C( 0.0f, 1.0f/3.0f, 0.0f );
-    const Orientation model = scene.V1 * (scene.T1 * (scene.P1 * scene.P0));
+    const Transformation model = scene.V1 * (scene.T1 * (scene.P1 * scene.P0));
     const glm::vec3 CinW = model * C;
     EXPECT_VEC3_NEAR( glm::vec3( 4.0f, 19.0f/9.0f, 0.0f ), CinW, precision );
 
@@ -44,7 +44,7 @@ TEST( SceneGraphOrientation, computeModel )
     EXPECT_VEC3_NEAR( glm::vec3( 4.0f, 19.0f/9.0f, 0.0f ), C2, precision );
 
     // Compute inverse to retrieve C
-    Orientation modelInv( model );
+    Transformation modelInv( model );
     modelInv.inverse();
     EXPECT_VEC3_NEAR( C, modelInv * CinW, precision );
 
@@ -54,42 +54,42 @@ TEST( SceneGraphOrientation, computeModel )
     EXPECT_VEC3_NEAR( glm::vec3( 1.0f, 4.0f/3.0f, 0.0f ), A0, precision );
 }
 
-TEST( SceneGraphOrientation, computeCAfterMoveT1 )
+TEST( SceneGraphTransformation, computeCAfterMoveT1 )
 {
     const float precision = 1e-5f;
-    SceneGraphOrientation scene;
+    SceneGraphTransformation scene;
 
     // Move T1 to example position
-    scene.T1 = Orientation( glm::vec3( 7.0f/3.0f, 1.0f/3.0f, 0.0f ) );
+    scene.T1 = Transformation( glm::vec3( 7.0f/3.0f, 1.0f/3.0f, 0.0f ) );
 
     const glm::vec3 C( 0.0f, 1.0f/3.0f, 0.0f );
     // Compose model
-    const Orientation model = scene.V1 * (scene.T1 * (scene.P1 * scene.P0));
+    const Transformation model = scene.V1 * (scene.T1 * (scene.P1 * scene.P0));
     // Apply Model-view on C
     const glm::vec3 CinW = model * C;
     EXPECT_VEC3_NEAR( glm::vec3( 3.0f, 19.0f/9.0f, 0.0f ), CinW, precision );
 }
 
-TEST( SceneGraphOrientation, computeModelView )
+TEST( SceneGraphTransformation, computeModelView )
 {
     const float precision = 1e-5f;
-    SceneGraphOrientation scene;
+    SceneGraphTransformation scene;
     
     // Move T1 to example position
-    scene.T1 = Orientation( glm::vec3( 7.0f/3.0f, 1.0f/3.0f, 0.0f ) );
+    scene.T1 = Transformation( glm::vec3( 7.0f/3.0f, 1.0f/3.0f, 0.0f ) );
 
     const glm::vec3 C( 0.0f, 1.0f/3.0f, 0.0f );
     // Compose model
-    const Orientation model = scene.V1 * (scene.T1 * (scene.P1 * scene.P0));
+    const Transformation model = scene.V1 * (scene.T1 * (scene.P1 * scene.P0));
     // Compose view
-    const Orientation view  = (Orientation::inverse(scene.C0) * (Orientation::inverse(scene.P1) * (Orientation::inverse(scene.T1) * Orientation::inverse(scene.V1))));
+    const Transformation view  = (Transformation::inverse(scene.C0) * (Transformation::inverse(scene.P1) * (Transformation::inverse(scene.T1) * Transformation::inverse(scene.V1))));
     // Apply Model-view on C
     const glm::vec3 CinCamera = view * (model * C);
     // Test it !
     EXPECT_VEC3_NEAR( glm::vec3( 1.0f, 1.0f/9.0f, 0.0f ), CinCamera, precision );
 
     // Another way is to compute "model orientation" of camera and inverse at the end !
-    const Orientation viewAlternative  = Orientation::inverse( scene.V1 * (scene.T1 * (scene.P1 * scene.C0)) );
+    const Transformation viewAlternative  = Transformation::inverse( scene.V1 * (scene.T1 * (scene.P1 * scene.C0)) );
     EXPECT_VEC3_NEAR( viewAlternative._position,   view._position,   precision );
     EXPECT_VEC3_NEAR( viewAlternative._homothetie, view._homothetie, precision );
 }

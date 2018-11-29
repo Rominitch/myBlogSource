@@ -5,7 +5,7 @@
 ///------------------------------------------------------------------------------------------------
 #include "Dependancies.h"
 
-#include "Common/Orientation.h"
+#include "Common/Transformation.h"
 
 ///------------------------------------------------------------------------------------------------
 
@@ -31,7 +31,7 @@ TEST(Quaternion, quaternion_mul)
         EXPECT_VEC4_NEAR( c, cal_c, 1e-6f );
     }
 
-    Orientation qc;
+    Transformation qc;
     {
         qc._position = om;
         qc._homothetie  = scale;
@@ -65,7 +65,7 @@ TEST(Quaternion, quaternion_mul_non_uniform)
         EXPECT_VEC4_NEAR( c, cal_c, RM::Maths::precision );
     }
 
-    Orientation qc;
+    Transformation qc;
     {
         qc._position = om;
         qc._homothetie  = scale;
@@ -98,7 +98,7 @@ TEST(Quaternion, quaternion_mul_non_uniform_PI_4)
         EXPECT_VEC4_NEAR( c, cal_c, RM::Maths::precision );
     }
 
-    Orientation qc;
+    Transformation qc;
     {
         qc._position = om;
         qc._homothetie  = scale;
@@ -139,12 +139,12 @@ TEST(Quaternion, quaternion_inverse)
     glm::vec4 a( 4.0f/6.0f, 2.0f/6.0f, 0.0f, 1.0f );
     glm::vec4 c( 10.0f/6.0f, 5.0f/6.0f, 0.0f, 1.0f );
 
-    Orientation qc;
+    Transformation qc;
     qc._position = om;
     qc._homothetie  = scale;
     qc._rotation = glm::angleAxis( angle, glm::vec3( 0.0f, 0.0f, 1.0f ) );
 
-    Orientation qa(qc);
+    Transformation qa(qc);
     qa.inverse();
 
     glm::vec3 cal_c = qc * a;
@@ -179,13 +179,13 @@ TEST(Quaternion, quaternion)
         EXPECT_VEC4_NEAR( d, cal_d, RM::Maths::precision );
     }
 
-    Orientation qc;
+    Transformation qc;
     {
-        Orientation op;
+        Transformation op;
         op._position = oa;
-        Orientation po;
+        Transformation po;
         po._position = -oa;
-        Orientation r;
+        Transformation r;
         r._rotation = glm::angleAxis(RM::Maths::PI_4, glm::vec3(0.0f, 0.0f, 1.0f));
         
         qc = op * r * po;
@@ -219,14 +219,14 @@ TEST(Quaternion, quaternion_SRT)
     }
 
     {
-        Orientation s;
+        Transformation s;
         s._homothetie = homothetie;
-        Orientation r;
+        Transformation r;
         r._rotation = glm::angleAxis( angle, axis );
-        Orientation t;
+        Transformation t;
         t._position = pos;
 
-        Orientation qc = t * (r * s);
+        Transformation qc = t * (r * s);
 
         // Near except
         glm::vec3 cal_c = qc * a;
@@ -257,14 +257,14 @@ TEST(Quaternion, quaternion_SRT_non_uniform)
     }
 
     {
-        Orientation s;
+        Transformation s;
         s._homothetie = homothetie;
-        Orientation r;
+        Transformation r;
         r._rotation = glm::angleAxis( angle, axis );
-        Orientation t;
+        Transformation t;
         t._position = pos;
 
-        Orientation qc = t * (r * s);
+        Transformation qc = t * (r * s);
 
         // Near except
         glm::vec3 cal_c = qc * a;
@@ -282,12 +282,12 @@ TEST(Quaternion, quaternion_final_composition)
     const glm::vec4 c( 1.0f, 7.0f/3.0f, 0.0f, 1.0f );
 
 
-    Orientation qm;
+    Transformation qm;
     qm._homothetie = glm::vec3( 0.5f, 1.0f, 1.0f );
     qm._rotation   = glm::angleAxis( angleM, axis );
     qm._position   = glm::vec3(2.0f/3.0f, 1.0f/2.0f, 0.0f);
 
-    Orientation qr;
+    Transformation qr;
     qr._homothetie = glm::vec3(RM::Maths::sqrt_2 * 2.0f/3.0f, RM::Maths::sqrt_2 / 3.0f, 1.0f );
     qr._rotation   = glm::angleAxis( angleR, axis );
     qr._position   = glm::vec3(3.0f, 0.0f, 0.0f);
@@ -296,7 +296,7 @@ TEST(Quaternion, quaternion_final_composition)
                         qm * qr._position, RM::Maths::precision );
 
     // Composition
-    Orientation qc = qm * qr;
+    Transformation qc = qm * qr;
 
     // Near except
     glm::vec3 cal_c = qc * a;
@@ -310,9 +310,9 @@ TEST(Quaternion, quaternion_interpolate )
 
     const glm::vec4 a( 1.0f, 1.0f, 0.0f, 1.0f );
 
-    Orientation qo;
+    Transformation qo;
 
-    Orientation qm;
+    Transformation qm;
     qm._homothetie = glm::vec3( 2.0f, 2.0f, 2.0f );
     qm._rotation   = glm::angleAxis( angle, axis );
     qm._position   = glm::vec3(4.0f, 4.0f, 0.0f);
@@ -321,7 +321,7 @@ TEST(Quaternion, quaternion_interpolate )
     for( int i=0; i < animation; ++i)
     {
         float f = float( i ) / float( animation - 1 );
-        Orientation qc = Orientation::slerp( qo, qm, f );
+        Transformation qc = Transformation::slerp( qo, qm, f );
 
         // Near except
         glm::vec3 cal_c = qc * a;
@@ -329,7 +329,7 @@ TEST(Quaternion, quaternion_interpolate )
         std::cout << cal_c.x << "," << cal_c.y << std::endl;
     }
 
-    Orientation qc = Orientation::slerp( qo, qm, 0.5f );
+    Transformation qc = Transformation::slerp( qo, qm, 0.5f );
 
     // Near except
     {

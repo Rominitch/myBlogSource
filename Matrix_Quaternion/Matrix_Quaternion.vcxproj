@@ -84,7 +84,9 @@
     <ClCompile Include="UT_SceneGraph.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Common\BlogRules.h" />
     <ClInclude Include="..\Common\Dependancies.h" />
+    <ClInclude Include="..\Common\Transformation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
